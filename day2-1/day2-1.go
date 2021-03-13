@@ -2,6 +2,7 @@ package main
 
 import (
     "fmt"
+    "strings"
 
     "example.com/helloworld"
 )
@@ -9,7 +10,11 @@ import (
 func main() {
     // Get a greeting message and print it.
     const name string = "Lunit"
-    message := helloworld.Hello(name)
+    var message = helloworld.Hello(name)
     fmt.Println(message)
+    nameUpper := strings.ToUpper(name)
+    fmt.Println(nameUpper)
+    messageUpper := strings.ToUpper(message)
+    fmt.Println(messageUpper)
     helloworld.Bye(name)
 }
