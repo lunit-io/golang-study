@@ -5,6 +5,7 @@ import (
     "strings"
 
     "example.com/helloworld"
+    "example.com/uuid"
 )
 
 func main() {
@@ -16,5 +17,12 @@ func main() {
     fmt.Println(nameUpper)
     messageUpper := strings.ToUpper(message)
     fmt.Println(messageUpper)
+    getUuid()
     helloworld.Bye(name)
+}
+
+
+func getUuid() {
+    uuidString := uuid.GenerateUUID()
+    fmt.Println(uuidString)
 }
