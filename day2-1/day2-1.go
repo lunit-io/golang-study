@@ -1,4 +1,4 @@
-package day2
+package main
 
 import (
     "fmt"
@@ -8,7 +8,7 @@ import (
 
 func main() {
     // Get a greeting message and print it.
-    const name string = "Gladys"
+    const name string = "Lunit"
     message := helloworld.Hello(name)
     fmt.Println(message)
     helloworld.Bye(name)
