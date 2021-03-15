@@ -1,6 +1,7 @@
 package main
 
 import (
+    "byebye"
     "fmt"
     "strings"
 
@@ -19,6 +20,7 @@ func main() {
     fmt.Println(messageUpper)
     getUuid()
     helloworld.Bye(name)
+    fmt.Println(bye.Bye("scbang"))
 }
 
 
