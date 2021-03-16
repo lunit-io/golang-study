@@ -1,12 +1,11 @@
 package main
 
 import (
-    "byebye"
-    "fmt"
-    "strings"
-
+    bye "byebye"
     "example.com/helloworld"
     "example.com/uuid"
+    "fmt"
+    "strings"
 )
 
 func main() {
