@@ -9,6 +9,7 @@ import (
 	"os"
 	"strconv"
 	"strings"
+	"sync"
 
 	"github.com/PuerkitoBio/goquery"
 )
@@ -123,6 +124,13 @@ func writeCSVLine(w *csv.Writer, jobSlice []string) {
 	checkErr(jwErr)
 }
 
+func writeCSVLineWithWait(w *csv.Writer, jobSlice []string, wg *sync.WaitGroup) {
+	defer wg.Done()
+
+	jwErr := w.Write(jobSlice)
+	checkErr(jwErr)
+}
+
 func writeJobsAsCSV(jobs []extractedJob) {
 	file, err := os.Create("jobs.csv")
 	checkErr(err)
@@ -135,11 +143,17 @@ func writeJobsAsCSV(jobs []extractedJob) {
 	wErr := w.Write(headers)
 	checkErr(wErr)
 
+	// https://stackoverflow.com/questions/18207772/how-to-wait-for-all-goroutines-to-finish-without-using-time-sleep
+	var wg sync.WaitGroup
+
 	for _, job := range jobs {
 		jobSlice := []string{"https://kr.indeed.com/viewjob?jk=" + job.id, job.title, job.location, job.salary, job.summary}
 
-		writeCSVLine(w, jobSlice)
+		wg.Add(1)
+		go writeCSVLineWithWait(w, jobSlice, &wg)
+		// writeCSVLine(w, jobSlice)
 	}
+	wg.Wait()
 }
 
 func writeJobsAsJSON(jobs []extractedJob) {
