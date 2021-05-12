@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/csv"
+	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
@@ -130,6 +131,20 @@ func writeJobsAsCSV(jobs []extractedJob) {
 	}
 }
 
+func writeJobsAsJSON(jobs []extractedJob) {
+	file, err := os.Create("jobs.json")
+	checkErr(err)
+
+	fmt.Println(jobs)
+	b, err := json.Marshal(jobs)
+	checkErr(err)
+	// os.Stdout.Write(b)
+	fmt.Println(string(b))
+	n, err := file.Write(b)
+	checkErr(err)
+	fmt.Println(n)
+}
+
 func main() {
 	fmt.Println(getURL(200))
 	noPages := getNoPage(getURL(200))
@@ -138,4 +153,5 @@ func main() {
 
 	fmt.Println(len(jobs))
 	writeJobsAsCSV(jobs)
+	// writeJobsAsJSON(jobs)
 }
