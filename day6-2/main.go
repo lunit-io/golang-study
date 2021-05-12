@@ -124,9 +124,11 @@ func writeCSVLine(w *csv.Writer, jobSlice []string) {
 	checkErr(jwErr)
 }
 
-func writeCSVLineWithWait(w *csv.Writer, jobSlice []string, wg *sync.WaitGroup) {
-	defer wg.Done()
+func writeCSVLineWithWait(w *csv.Writer, jobSlice []string, wg *sync.WaitGroup, mu *sync.Mutex) {
+	defer wg.Done()   // later send signal 'Done'
+	defer mu.Unlock() // first unlock
 
+	mu.Lock()
 	jwErr := w.Write(jobSlice)
 	checkErr(jwErr)
 }
@@ -145,12 +147,14 @@ func writeJobsAsCSV(jobs []extractedJob) {
 
 	// https://stackoverflow.com/questions/18207772/how-to-wait-for-all-goroutines-to-finish-without-using-time-sleep
 	var wg sync.WaitGroup
+	// https://stackoverflow.com/questions/29981050/concurrent-writing-to-a-file
+	var mu sync.Mutex
 
 	for _, job := range jobs {
 		jobSlice := []string{"https://kr.indeed.com/viewjob?jk=" + job.id, job.title, job.location, job.salary, job.summary}
 
 		wg.Add(1)
-		go writeCSVLineWithWait(w, jobSlice, &wg)
+		go writeCSVLineWithWait(w, jobSlice, &wg, &mu)
 		// writeCSVLine(w, jobSlice)
 	}
 	wg.Wait()
